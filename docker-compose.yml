@@ -1,0 +1,47 @@
+name: payment-management-service
+
+services:
+  db:
+    image: postgres
+    environment:
+      - POSTGRES_DB=${DATABASE_NAME}
+      - POSTGRES_USER=${DATABASE_USER}
+      - POSTGRES_PASSWORD=${DATABASE_PASSWORD}
+    restart: always
+    command: -p ${DATABASE_PORT}
+    container_name: payments-database
+    volumes:
+      - ./pgdata:/var/lib/postgresql/data
+    ports:
+      - '${DATABASE_PORT}:${DATABASE_PORT}'
+    networks:
+      - fine-management-app-network
+
+  app: 
+    build:
+      context: ./
+      dockerfile: Dockerfile
+    container_name: payment-management-service-app
+    restart: always
+    environment:
+      - PORT=${APP_PORT}
+      - AUTH0_M2M_CLIENT_ID=${AUTH0_M2M_CLIENT_ID}
+      - AUTH0_M2M_CLIENT_SECRET=${AUTH0_M2M_CLIENT_SECRET}
+      - AUTH0_DOMAIN=${AUTH0_DOMAIN}
+      - AUTH0_AUDIENCE=${AUTH0_AUDIENCE}
+      - DATABASE_URL=${DATABASE_URL}
+    ports:
+      - '${APP_PORT}:${APP_PORT}'
+    depends_on:
+      - db
+    volumes:
+      - ./:/app
+    networks:
+      - fine-management-app-network
+
+
+
+networks:
+  fine-management-app-network:
+    external: true
+    name: fine-management-app-network
