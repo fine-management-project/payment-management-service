@@ -1,4 +1,4 @@
-import { EntityId } from 'src/сommon/value-objects/entity-id.vo';
+import { EntityId } from 'src/common/value-objects/entity-id.vo';
 
 export class PaymentIntentId extends EntityId {
   constructor(value: string) {

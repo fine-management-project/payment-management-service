@@ -32,7 +32,6 @@ export class PaymentAttempt {
   get createdAt() {
     return this._createdAt;
   }
-  $;
 
   get updatedAt() {
     return this._updatedAt;
