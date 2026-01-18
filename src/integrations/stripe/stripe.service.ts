@@ -29,7 +29,6 @@ export class StripeService {
   }
 
   constructEvent(request: Request, signature?: string) {
-    console.log('request', request.rawBody);
     return this.stripeClient.webhooks.constructEvent(
       request.rawBody,
       signature ?? '',
