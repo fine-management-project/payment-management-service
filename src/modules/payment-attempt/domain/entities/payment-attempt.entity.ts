@@ -1,4 +1,5 @@
-import { FineId } from '../value-objects/fine-id.vo';
+import { FineId } from '../../../fine/domain/value-objects/fine-id.vo';
+import { PaymentAttemptStatusEnum } from '../enum/payment-attempt-status.enum';
 import { PaymentAttemptId } from '../value-objects/payment-attempt-id.vo';
 import { PaymentAttemptStatus } from '../value-objects/payment-attempt-status.vo';
 import { PaymentIntentId } from '../value-objects/payment-intent-id.vo';
@@ -9,8 +10,8 @@ export class PaymentAttempt {
     private readonly _paymentIntentId: PaymentIntentId,
     private readonly _fineId: FineId,
     private _status: PaymentAttemptStatus,
-    private readonly _createdAt: Date,
-    private _updatedAt: Date,
+    private readonly _createdAt: Date = new Date(),
+    private _updatedAt: Date = new Date(),
   ) {}
 
   get id() {
@@ -37,9 +38,27 @@ export class PaymentAttempt {
     return this._updatedAt;
   }
 
-  updateStatus(newStatus: PaymentAttemptStatus) {
-    this._status.validateUpdate(newStatus);
+  static fromData(data: {
+    id: string;
+    paymentIntentId: string;
+    fineId: string;
+    status: PaymentAttemptStatusEnum;
+    createdAt?: Date;
+    updatedAt?: Date;
+  }): PaymentAttempt {
+    const { id, paymentIntentId, fineId, status, createdAt, updatedAt } = data;
 
+    return new PaymentAttempt(
+      new PaymentAttemptId(id),
+      new PaymentIntentId(paymentIntentId),
+      new FineId(fineId),
+      new PaymentAttemptStatus(status),
+      createdAt,
+      updatedAt,
+    );
+  }
+
+  updateStatus(newStatus: PaymentAttemptStatus) {
     this._status = newStatus;
     this._updatedAt = new Date();
   }
