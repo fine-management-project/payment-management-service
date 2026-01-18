@@ -13,12 +13,13 @@ import {
   CannotCreateCorrectPaymentIntentForFineException,
   CannotCreatePaymentAttemptException,
   CannotUpdatePaymentAttemptException,
-} from '../exceptions/payment.service.exceptions';
+} from '../exceptions/payment-attempt.service.exceptions';
 import { IPaymentAttemptRepository } from '../interfaces/payment-attempt.repository.interface';
 import { CannotFindPaymentAttemptException } from '../exceptions/common.exceptions';
 import { Request } from 'express';
 import { LOGGER_SERVICE } from 'src/common/shared/constants';
 import { ILoggerService } from 'src/common/logger/logger.types';
+import { FineCannotBePaidException } from '../exceptions/pay.service.exceptions';
 
 @Injectable()
 export class PayService {
@@ -40,6 +41,8 @@ export class PayService {
     const fineId = new FineId(id);
 
     const fine = await this.fineService.getFineById(fineId);
+
+    if (!fine.canBePaid()) throw new FineCannotBePaidException();
 
     const paymentAttemptId = PaymentAttemptId.create();
 

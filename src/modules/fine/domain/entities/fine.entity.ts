@@ -33,6 +33,10 @@ export class Fine {
     return this._status;
   }
 
+  canBePaid() {
+    return this.status === FineStatusEnum.READY_FOR_PAYMENT;
+  }
+
   toString() {
     return `Fine: ${this.id.toString()}\r\n${this.userId.toString()}\r\n${this.amount.toString()}\r\nCurrency: ${this.currency}\r\nStatus: ${this.status}`;
   }
