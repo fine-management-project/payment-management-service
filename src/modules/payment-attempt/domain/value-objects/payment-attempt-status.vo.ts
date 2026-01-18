@@ -10,15 +10,6 @@ export class PaymentAttemptStatus {
     return this._value;
   }
 
-  validateUpdate(newValue: PaymentAttemptStatus) {
-    if (this._value !== PaymentAttemptStatusEnum.PENDING) {
-      throw new CannotChangePaymentAttemptStatusException(
-        newValue.value,
-        this._value,
-      );
-    }
-  }
-
   toString() {
     return `Payment Attempt Status: ${this.value}`;
   }
