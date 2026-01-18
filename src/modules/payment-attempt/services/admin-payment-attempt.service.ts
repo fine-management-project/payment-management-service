@@ -7,11 +7,12 @@ import {
 } from '../interfaces/admin-payment-attempt.repository.interface';
 import { GetPaymentAttemptsRequest } from '../dtos/requests/payment-attempt/get-payment-attempts.request';
 import { PaymentAttempt as PaymentAttemptEntity } from '../domain/entities/payment-attempt.entity';
-import { ICountedData } from 'src/common/interfaces/counted-data.interface';
 import { Param } from 'src/common/value-objects/param.vo';
 import { SortingOptions } from 'src/common/value-objects/sorting-options.vo';
 import { PaginationOptions } from 'src/common/value-objects/pagination-options.vo';
 import { PaymentAttemptStatus } from '../domain/value-objects/payment-attempt-status.vo';
+import { PaymentAttemptId } from '../domain/value-objects/payment-attempt-id.vo';
+import { ICountedData } from 'src/common/interfaces/counted-data.interface';
 
 @Injectable()
 export class AdminPaymentAttemptService {
@@ -46,6 +47,12 @@ export class AdminPaymentAttemptService {
       filters,
       pagination,
       sortingOptions,
+    );
+  }
+
+  async deletePaymentAttempt(id: string): Promise<void> {
+    await this.paymentAttemptRepository.deletePaymentAttempt(
+      new PaymentAttemptId(id),
     );
   }
 }

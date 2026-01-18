@@ -1,9 +1,9 @@
 import { PaginationOptions } from 'src/common/value-objects/pagination-options.vo';
 import { SortingOptions } from 'src/common/value-objects/sorting-options.vo';
-import { ICountedData } from 'src/common/interfaces/counted-data.interface';
 import { PaymentAttemptStatus } from '../domain/value-objects/payment-attempt-status.vo';
 import { PaymentAttempt as PaymentAttemptEntity } from '../domain/entities/payment-attempt.entity';
 import { PaymentAttemptId } from '../domain/value-objects/payment-attempt-id.vo';
+import { ICountedData } from 'src/common/interfaces/counted-data.interface';
 
 export interface IGetPaymentAttemptsFilters {
   status?: PaymentAttemptStatus;

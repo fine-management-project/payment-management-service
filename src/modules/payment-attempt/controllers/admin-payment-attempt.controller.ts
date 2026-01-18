@@ -1,6 +1,7 @@
 import {
   Body,
   Controller,
+  Delete,
   HttpCode,
   HttpStatus,
   Param,
@@ -10,8 +11,6 @@ import {
 } from '@nestjs/common';
 import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { JWTAuthGuard } from 'src/common/guards/jwt.guard';
-import { AuthUser } from 'src/common/types/express';
-import { Request } from 'express';
 import { PaymentAttemptResponseMapper } from '../mappers/responses/payment-attempt.response.mapper';
 import { AdminGuard } from 'src/common/guards/admin.guard';
 import { AdminPaymentAttemptService } from '../services/admin-payment-attempt.service';
@@ -30,7 +29,7 @@ export class AdminPaymentAttemptController {
 
   @Post()
   @HttpCode(HttpStatus.OK)
-  @ApiOperation({ summary: 'Get payment attempts' })
+  @ApiOperation({ summary: 'Admin: Get payment attempts' })
   @ApiResponse({
     status: HttpStatus.OK,
     description: 'Returns payment attempts',
@@ -52,5 +51,22 @@ export class AdminPaymentAttemptController {
       ),
       total,
     );
+  }
+
+  @Delete('/:id')
+  @HttpCode(HttpStatus.OK)
+  @ApiOperation({
+    summary: 'Admin: Delete payment attempt by id',
+  })
+  @ApiResponse({
+    status: HttpStatus.OK,
+    description: 'Returns nothing',
+  })
+  @ApiResponse({
+    status: HttpStatus.FORBIDDEN,
+    description: 'Admin access is required',
+  })
+  async deleteFine(@Param('id') id: string) {
+    await this.adminPaymentAttemptService.deletePaymentAttempt(id);
   }
 }
