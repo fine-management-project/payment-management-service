@@ -11,5 +11,6 @@ interface AuthUser {
 declare module 'express' {
   interface Request {
     user?: AuthUser;
+    rawBody: Buffer;
   }
 }
