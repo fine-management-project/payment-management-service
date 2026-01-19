@@ -20,6 +20,7 @@ import { Request } from 'express';
 import { LOGGER_SERVICE } from 'src/common/shared/constants';
 import { ILoggerService } from 'src/common/logger/logger.types';
 import { FineCannotBePaidException } from '../exceptions/pay.service.exceptions';
+import { PaymentAttemptNotificationsService } from './event-producers/payment-attempt-notifications/payment-attempt-notifications.service';
 
 @Injectable()
 export class PayService {
@@ -30,7 +31,8 @@ export class PayService {
     private readonly stripeService: StripeService,
     private readonly fineService: FineService,
     @Inject(LOGGER_SERVICE)
-    protected readonly loggerService: ILoggerService,
+    private readonly loggerService: ILoggerService,
+    private readonly paymentNotificationsService: PaymentAttemptNotificationsService,
   ) {
     setTimeout(() => {
       this.loggerService.setContext(this.constructor.name);
@@ -66,6 +68,8 @@ export class PayService {
 
     if (!createdPaymentAttempt) throw new CannotCreatePaymentAttemptException();
 
+    await this.paymentNotificationsService.sendFinePaymentProcessing(fine.id);
+
     return paymentIntent.client_secret;
   }
 
@@ -95,7 +99,6 @@ export class PayService {
 
   private async handleSuccessfulPayment(paymentAttemptId: string) {
     const convertedPaymentAttemptId = new PaymentAttemptId(paymentAttemptId);
-    console.log('handleSuccessfulPayment', paymentAttemptId);
 
     const paymentAttempt =
       await this.paymentAttemptRepository.getPaymentAttemptById(
@@ -112,6 +115,10 @@ export class PayService {
       await this.paymentAttemptRepository.updatePaymentAttempt(paymentAttempt);
 
     if (!updatedPaymentAttempt) throw new CannotUpdatePaymentAttemptException();
+
+    await this.paymentNotificationsService.sendFinePaymentSuccess(
+      paymentAttempt.fineId,
+    );
   }
 
   private async handleFailedPayment(paymentAttemptId: string) {
@@ -132,5 +139,9 @@ export class PayService {
       await this.paymentAttemptRepository.updatePaymentAttempt(paymentAttempt);
 
     if (!updatedPaymentAttempt) throw new CannotUpdatePaymentAttemptException();
+
+    await this.paymentNotificationsService.sendFinePaymentFailed(
+      paymentAttempt.fineId,
+    );
   }
 }
