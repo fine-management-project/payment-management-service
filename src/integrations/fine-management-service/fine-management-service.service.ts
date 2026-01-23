@@ -3,7 +3,6 @@ import { Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { FineId } from 'src/modules/fine/domain/value-objects/fine-id.vo';
 import { FineDto } from './dtos/fine.dto';
-import { BaseResponse } from 'src/common/responses/base.response';
 import { firstValueFrom } from 'rxjs';
 import { AxiosResponse } from 'node_modules/axios/index.cjs';
 

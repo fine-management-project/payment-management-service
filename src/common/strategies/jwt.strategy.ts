@@ -9,7 +9,6 @@ dotenv.config();
 @Injectable()
 export class JwtStrategy extends PassportStrategy(Strategy) {
   constructor() {
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-call
     super({
       secretOrKeyProvider: passportJwtSecret({
         cache: true,
@@ -18,7 +17,6 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
         jwksUri: `https://${process.env.AUTH0_DOMAIN}/.well-known/jwks.json`,
       }),
 
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-assignment
       jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
       audience: process.env.AUTH0_AUDIENCE,
       issuer: `https://${process.env.AUTH0_DOMAIN}/`,

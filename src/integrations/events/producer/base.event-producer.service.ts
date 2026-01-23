@@ -1,4 +1,3 @@
-import { ConfigService } from '@nestjs/config';
 import {
   PublishCommand,
   PublishCommandInput,
@@ -29,17 +28,14 @@ export abstract class BaseEventProducerService {
       MessageAttributes: event.getMessageAttributes(),
     };
 
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-call
     return new PublishCommand(commandInput);
   }
 
   protected async publishEvent<T>(
     event: BaseEventDto<T, ProducerService.paymentManagementService>,
   ): Promise<PublishCommandOutput> {
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
     const command: PublishCommand = this.createSendCommand<T>(event);
 
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-member-access
     return await this.snsClient.send(command);
   }
 }

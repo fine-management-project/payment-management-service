@@ -22,7 +22,6 @@ import { DEFAUlT_SNS_TOPIC, SNS_CLIENT } from 'src/common/shared/constants';
           );
         }
 
-        // eslint-disable-next-line @typescript-eslint/no-unsafe-call
         return new SNSClient({
           region: region,
           endpoint: endpoint,
