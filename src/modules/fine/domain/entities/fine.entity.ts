@@ -34,7 +34,10 @@ export class Fine {
   }
 
   canBePaid() {
-    return this.status === FineStatusEnum.READY_FOR_PAYMENT;
+    return (
+      this.status === FineStatusEnum.READY_FOR_PAYMENT ||
+      this.status === FineStatusEnum.PROCESSING_PAYMENT
+    );
   }
 
   toString() {
